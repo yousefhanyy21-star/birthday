@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#08030d">
+<title>Happy Birthday Nevo</title>
+<style>
+  *{box-sizing:border-box}
+  :root{--pink:#ff4fd8;--hot:#ff168c;--violet:#a84dff}
+  body{margin:0;min-height:100vh;background:#07030b;color:#fff;font-family:Arial,Helvetica,sans-serif;overflow:hidden}
+  #matrix{position:fixed;inset:0;width:100%;height:100%;opacity:.55}
+  .shade{position:fixed;inset:0;background:radial-gradient(ellipse at center,rgba(26,4,29,.18),rgba(0,0,0,.82));pointer-events:none}
+  .screen{position:relative;z-index:2;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px;text-align:center}
+  .panel{width:min(850px,100%);padding:34px 20px 30px;border:1px solid rgba(255,79,216,.28);border-radius:24px;background:rgba(8,2,13,.62);box-shadow:0 0 55px rgba(255,22,140,.13),inset 0 0 35px rgba(168,77,255,.06);backdrop-filter:blur(5px)}
+  .eyebrow{letter-spacing:.45em;text-transform:uppercase;color:#f8a5e6;font-size:11px;margin-bottom:24px}
+  .count{font-size:clamp(70px,18vw,150px);font-weight:900;line-height:.9;color:#ff73dc;text-shadow:0 0 12px var(--pink),0 0 38px var(--hot);animation:pulse .8s infinite alternate}
+  h1{margin:18px 0 0;font-size:clamp(35px,9vw,76px);line-height:1.02;letter-spacing:.04em;text-transform:uppercase;text-shadow:0 0 8px var(--pink),0 0 28px var(--hot)}
+  h1 span{display:block;color:#fff}
+  .name{color:#ff79df!important;font-size:clamp(48px,12vw,100px);letter-spacing:.12em}
+  .message{margin:20px auto 0;max-width:540px;color:#f5c9ed;font-size:clamp(14px,3.5vw,18px);line-height:1.7}
+  button{margin-top:27px;border:1px solid #ff75db;border-radius:999px;padding:13px 25px;background:linear-gradient(100deg,#e51b9a,#812bd2);color:#fff;font-weight:700;letter-spacing:.08em;cursor:pointer;box-shadow:0 0 22px #e51b9a66}
+  button:hover{transform:translateY(-2px);filter:brightness(1.15)}
+  .hidden{display:none}
+  .heart{position:fixed;z-index:3;bottom:-40px;color:#ff5ccf;opacity:.85;animation:floatUp linear forwards;text-shadow:0 0 12px #ff168c}
+  .spark{position:fixed;z-index:1;width:3px;height:3px;border-radius:50%;background:#ffd9f5;box-shadow:0 0 10px #ff5ccf;animation:twinkle 2s infinite alternate}
+  @keyframes pulse{to{transform:scale(1.06);filter:brightness(1.3)}}
+  @keyframes floatUp{to{transform:translateY(-115vh) rotate(360deg);opacity:0}}
+  @keyframes twinkle{to{opacity:.15;transform:scale(.4)}}
+  @media(max-width:480px){.panel{padding:30px 15px}.eyebrow{letter-spacing:.25em}}
+
+  .book-overlay{position:fixed;inset:0;z-index:10;display:none;align-items:center;justify-content:center;padding:18px;background:rgba(2,0,5,.88);backdrop-filter:blur(8px)}
+  .book-overlay.show{display:flex;animation:fadeIn .5s ease}
+  .book-wrap{width:min(760px,100%);perspective:1400px}
+  .book-title{font-size:clamp(22px,5vw,34px);color:#ff9be7;text-shadow:0 0 15px #ff168c;margin:0 0 16px;letter-spacing:.08em}
+  .book{position:relative;display:grid;grid-template-columns:1fr 1fr;min-height:390px;border:2px solid #c45aa9;border-radius:12px 18px 18px 12px;overflow:hidden;box-shadow:0 0 35px #ff168c55,0 18px 55px #000;background:#f8e8f2;color:#542044;transform-origin:left center;animation:bookOpen .9s ease both}
+  .page{padding:clamp(14px,3vw,26px);display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;min-width:0;background:linear-gradient(90deg,#f4ddeb,#fff8fc 12%,#fff8fc)}
+  .page:first-child{border-right:1px solid #e5b9d5;box-shadow:inset -8px 0 14px #9e47721a}
+  .page h3{font-family:Georgia,serif;font-size:clamp(18px,4vw,25px);margin:0 0 12px;color:#a32978}
+  .page p{font-family:Georgia,serif;line-height:1.5;font-size:clamp(13px,3vw,16px);margin:8px 0;color:#71435f}
+  .photo-slot{width:100%;height:220px;border:2px dashed #d67ab6;border-radius:8px;background:linear-gradient(135deg,#f8d9eb,#fff4fb);display:flex;align-items:center;justify-content:center;overflow:hidden;color:#a34a83;font-size:14px}
+  .photo-slot img{width:100%;height:100%;object-fit:cover;display:block}
+  .book-controls{display:flex;align-items:center;justify-content:center;gap:14px;margin-top:17px;flex-wrap:wrap}
+  .book-controls button{margin:0;padding:11px 20px}
+  .page-number{color:#f8c7eb;font-size:13px;letter-spacing:.12em}
+  .book-close{position:absolute;right:22px;top:15px;margin:0!important;padding:8px 13px!important;background:#3c1536!important;border-color:#d76bb9!important}
+  @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+  @keyframes bookOpen{from{transform:rotateY(-28deg) scale(.85);opacity:0}to{transform:rotateY(0) scale(1);opacity:1}}
+  @media(max-width:560px){.book{min-height:340px}.photo-slot{height:155px}.page{padding:12px 9px}.book-title{margin-top:32px}}
+
+</style>
+</head>
+<body>
+<canvas id="matrix"></canvas><div class="shade"></div>
+<main class="screen">
+  <section class="panel">
+    <div class="eyebrow">A little surprise for you</div>
+    <div id="count" class="count">3</div>
+    <div id="greeting" class="hidden">
+      <h1>Happy <span>Birthday</span><span class="name">NEVO</span></h1>
+      <p class="message">Wishing you a day full of happiness, love, beautiful moments and everything that makes you smile. ✨</p>
+      <button id="more">MAKE A WISH ✨</button>
+    </div>
+    <p id="hint" class="message">Get ready for your surprise...</p>
+  </section>
+</main>
+
+<div class="book-overlay" id="bookOverlay">
+  <button class="book-close" id="closeBook">✕</button>
+  <div class="book-wrap">
+    <h2 class="book-title">A LITTLE BOOK FOR NEVO 💗</h2>
+    <div class="book" id="book">
+      <div class="page" id="leftPage">
+        <h3>Beautiful Memories</h3>
+        <div class="photo-slot"><span>📷 Add photo 1<br>photo1.jpg</span></div>
+        <p>Every picture holds a little story...</p>
+      </div>
+      <div class="page" id="rightPage">
+        <h3> Favorite PIC </h3>
+        <div class="photo-slot"><span>📷 Add photo 2<br>photo2.jpg</span></div>
+        <p>...and every memory is worth keeping. ✨</p>
+      </div>
+    </div>
+    <div class="book-controls">
+      <button id="prevPage">← BACK</button>
+      <span class="page-number" id="pageNumber">1 / 3</span>
+      <button id="nextPage">NEXT →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const canvas=document.getElementById('matrix'),ctx=canvas.getContext('2d');
+let w,h,cols,drops,font=15;
+function resize(){w=canvas.width=innerWidth;h=canvas.height=innerHeight;cols=Math.ceil(w/font);drops=Array(cols).fill(1)}
+addEventListener('resize',resize);resize();
+const chars='NEVO♥0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+function draw(){
+ ctx.fillStyle='rgba(5,1,9,.12)';ctx.fillRect(0,0,w,h);
+ ctx.font=font+'px monospace';
+ for(let i=0;i<drops.length;i++){
+  const t=chars[Math.floor(Math.random()*chars.length)];
+  ctx.fillStyle=Math.random()>.94?'#fff0fb':'#ff269f';
+  ctx.fillText(t,i*font,drops[i]*font);
+  if(drops[i]*font>h&&Math.random()>.975)drops[i]=0;
+  drops[i]++;
+ }
+ requestAnimationFrame(draw);
+}draw();
+function heart(){
+ const el=document.createElement('div');el.className='heart';el.textContent=Math.random()>.5?'♥':'♡';
+ el.style.left=Math.random()*100+'vw';el.style.fontSize=(15+Math.random()*28)+'px';
+ el.style.animationDuration=(5+Math.random()*5)+'s';document.body.appendChild(el);
+ setTimeout(()=>el.remove(),10500);
+}
+setInterval(heart,420);
+for(let i=0;i<45;i++){const s=document.createElement('i');s.className='spark';s.style.left=Math.random()*100+'vw';s.style.top=Math.random()*100+'vh';s.style.animationDelay=Math.random()*2+'s';document.body.appendChild(s)}
+let n=3;const count=document.getElementById('count');
+const timer=setInterval(()=>{n--;if(n>0){count.textContent=n}else{clearInterval(timer);count.classList.add('hidden');document.getElementById('hint').classList.add('hidden');document.getElementById('greeting').classList.remove('hidden')}},1000);
+const spreads = [
+  [
+    ["Beautiful Memories","WhatsApp Image 2026-11-15 at 7.45.28 PM.jpeg","Every picture holds a little story..."],
+    ["Favorite Picture","WhatsApp Image 2026-11-15 at 7.45.28 PM (1).jpeg","...and every memory is worth keeping. ✨"]
+  ],
+  [
+    ["Little Things","WhatsApp Image 2026-11-15 at 7.45.28 PM (2).jpeg","The small moments often mean the most."],
+    ["Big Smiles","WhatsApp Image 2026-11-15 at 7.45.28 PM (3).jpeg","Keep smiling and shining, always. 💗"]
+  ],
+  [
+    ["For You, Nevo","WhatsApp Image 2026-11-15 at 7.45.28 PM (4).jpeg","You deserve all the happiness in the world."],
+    ["To Be Continued...","WhatsApp Image 2026-11-15 at 7.45.43 PM.jpeg","More memories, more laughter, more magic. 💫"]
+  ]
+];
+let spreadIndex=0;
+function renderSpread(){
+ const spread=spreads[spreadIndex];
+ [["leftPage",spread[0]],["rightPage",spread[1]]].forEach(([id,data])=>{
+  const page=document.getElementById(id);
+  page.innerHTML=`<h3>${data[0]}</h3><div class="photo-slot"><img src="${data[1]}" alt="${data[0]}" onerror="this.remove();this.parentElement.innerHTML='<span>📷 Add your photo<br>${data[1]}</span>'"></div><p>${data[2]}</p>`;
+ });
+ document.getElementById('pageNumber').textContent=`${spreadIndex+1} / ${spreads.length}`;
+ document.getElementById('prevPage').disabled=spreadIndex===0;
+ document.getElementById('nextPage').textContent=spreadIndex===spreads.length-1?'CLOSE BOOK':'NEXT →';
+}
+document.getElementById('more').addEventListener('click',()=>{
+ for(let i=0;i<22;i++)setTimeout(heart,i*70);
+ document.getElementById('bookOverlay').classList.add('show');
+ spreadIndex=0;renderSpread();
+});
+document.getElementById('nextPage').addEventListener('click',()=>{
+ if(spreadIndex<spreads.length-1){spreadIndex++;renderSpread()}
+ else document.getElementById('bookOverlay').classList.remove('show');
+});
+document.getElementById('prevPage').addEventListener('click',()=>{if(spreadIndex>0){spreadIndex--;renderSpread()}});
+document.getElementById('closeBook').addEventListener('click',()=>document.getElementById('bookOverlay').classList.remove('show'));
+document.getElementById('bookOverlay').addEventListener('click',e=>{if(e.target.id==='bookOverlay')e.currentTarget.classList.remove('show')});
+</script>
+</body>
+</html>
